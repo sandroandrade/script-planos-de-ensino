@@ -1,13 +1,27 @@
 #!/usr/bin/env python
 
 import mysql.connector
+import shutil
+import os
+
 from jinja2 import Template, Environment, FileSystemLoader
+
+def copyDirectory(src, dest):
+    try:
+        shutil.copytree(src, dest)
+    # Directories are the same
+    except shutil.Error as e:
+        print('Directory not copied. Error: %s' % e)
+    # Any error saying that the directory doesn't exist
+    except OSError as e:
+        print('Directory not copied. Error: %s' % e)
 
 env = Environment(
     loader=FileSystemLoader('./')
 )
 
-template = env.get_template("main.tex")
+template = env.get_template("template/main.tex.tmpl")
+os.makedirs('output')
 
 cnx = mysql.connector.connect(user='ads', password='ads',
                               host='127.0.0.1',
@@ -53,6 +67,8 @@ for row in cursor:
     "INNER JOIN "
     "(select itemId, value from tiki_tracker_item_fields WHERE itemId={itemId} and fieldId=96) semestre".format(itemId=row['itemId']))
     data = cursor.fetchone()
-    print(template.render(data))
+    copyDirectory('template', "output/" + data['codigo'])
+    with open("output/" + data['codigo'] + "/" + data['codigo'] + ".tex", "w") as fh:
+        fh.write(template.render(data))
 
 cnx.close()
