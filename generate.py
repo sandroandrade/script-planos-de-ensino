@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import mysql.connector
+import subprocess
 import shutil
 import os
 
@@ -21,6 +22,7 @@ env = Environment(
 )
 
 template = env.get_template("template/main.tex.tmpl")
+os.makedirs('tmp')
 os.makedirs('output')
 
 cnx = mysql.connector.connect(user='ads', password='ads',
@@ -67,8 +69,15 @@ for row in cursor:
     "INNER JOIN "
     "(select itemId, value from tiki_tracker_item_fields WHERE itemId={itemId} and fieldId=96) semestre".format(itemId=row['itemId']))
     data = cursor.fetchone()
-    copyDirectory('template', "output/" + data['codigo'])
-    with open("output/" + data['codigo'] + "/" + data['codigo'] + ".tex", "w") as fh:
+    print("Generating " + data['codigo'])
+    copyDirectory('template', "tmp/" + data['codigo'])
+    with open("tmp/" + data['codigo'] + "/" + data['codigo'] + ".tex", "w") as fh:
         fh.write(template.render(data))
+    os.chdir("tmp/" + data['codigo'])
+    proc = subprocess.Popen(['pdflatex', data['codigo'] + ".tex"], stdout=subprocess.PIPE)
+    proc.communicate()
+    shutil.move(data['codigo'] + ".pdf", "../../output/")
+    os.chdir("../../")
 
+shutil.rmtree("tmp")
 cnx.close()
