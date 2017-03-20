@@ -76,7 +76,6 @@ for row in cursor:
     print("Generating " + data['plano']['codigo'])
     data['pre_requisitos'] = []
     if data['plano']['pre_requisitos']:
-        print ("pre-requisitos " + data['plano']['pre_requisitos'])
         cursor.execute("SELECT CONCAT(ttif1.value, ' - ', ttif2.value) as pre_requisito FROM "
         "tiki_tracker_item_fields ttif1, tiki_tracker_item_fields ttif2 WHERE "
         "ttif1.itemId in ({CodPreReqs}) and ttif1.fieldId=45 and "
