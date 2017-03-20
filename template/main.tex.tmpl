@@ -26,24 +26,30 @@
 \makecvtitle
 \vspace{-0.5cm}
 \section{Informações da Disciplina}
-\cvdoubleitem{Nome}{{ '{' }}{{ nome }}{{ '}' }}{Código}{{ '{' }}{{ codigo }}{{ '}' }}
-\cvdoubleitem{Carga Horária}{{ '{' }}{{ carga_horaria }}h}{Semestre}{{ '{' }}{{ semestre }}{% if semestre != "não definido" %}\textsuperscript{o}{% endif %}}
+\cvdoubleitem{Nome}{{ '{' }}{{ plano.nome }}{{ '}' }}{Código}{{ '{' }}{{ plano.codigo }}{{ '}' }}
+\cvdoubleitem{Carga Horária}{{ '{' }}{{ plano.carga_horaria }}h}{Semestre}{{ '{' }}{{ plano.semestre }}{% if semestre != "não definido" %}\textsuperscript{o}{% endif %}}
 \cvdoubleitem{Professor}{???}{}{}
 
 \section{Ementa}
-{{ ementa }}
+{{ plano.ementa }}
 
 \section{Objetivos}
 \textbf{Gerais}\\
-{{ objetivos_gerais }}
+{{ plano.objetivos_gerais }}
 ~\\~\\
 \textbf{Específicos}\\
-{{ objetivos_especificos }}
+{{ plano.objetivos_especificos }}
 
 \section{Pré-Requisitos}
-\begin{itemize}%
-	\item INF008 -- Programação Orientada a Objetos
+{% if pre_requisitos %}
+\begin{itemize}
+    {% for pre_requisito in pre_requisitos %}
+    \item {{ pre_requisito.pre_requisito }}
+    {% endfor %}
 \end{itemize}
+{% else %}
+Nenhum
+{% endif %}
 
 \section{Conteúdo Programático}
 \begin{itemize}
@@ -92,7 +98,7 @@
 Aulas expositivas, práticas em laboratório e estudos de caso.
 
 \section{Recursos}
-{{ recursos }}
+{{ plano.recursos }}
 
 \section{Avaliações}
 

@@ -30,11 +30,11 @@ cnx = mysql.connector.connect(user='ads', password='ads',
                               database='ads')
 
 cursor = cnx.cursor(dictionary=True, buffered=True)
-cursor.execute("select itemId from tiki_tracker_items where trackerId=11")
+cursor.execute("SELECT itemId FROM tiki_tracker_items where trackerId=11")
 
 for row in cursor:
     cursor = cnx.cursor(dictionary=True, buffered=True)
-    cursor.execute("select "
+    cursor.execute("SELECT "
     "codigo.value as codigo, "
     "nome.value as nome, "
     "carga_horaria.value as carga_horaria, "
@@ -47,36 +47,45 @@ for row in cursor:
     "pre_requisitos.value as pre_requisitos, "
     "semestre.value as semestre "
     "FROM "
-    "(select itemId, value from tiki_tracker_item_fields WHERE itemId={itemId} and fieldId=45) codigo "
+    "(SELECT itemId, value FROM tiki_tracker_item_fields WHERE itemId={itemId} and fieldId=45) codigo "
     "INNER JOIN "
-    "(select itemId, value from tiki_tracker_item_fields WHERE itemId={itemId} and fieldId=46) nome "
+    "(SELECT itemId, value FROM tiki_tracker_item_fields WHERE itemId={itemId} and fieldId=46) nome "
     "INNER JOIN "
-    "(select itemId, value from tiki_tracker_item_fields WHERE itemId={itemId} and fieldId=47) carga_horaria "
+    "(SELECT itemId, value FROM tiki_tracker_item_fields WHERE itemId={itemId} and fieldId=47) carga_horaria "
     "INNER JOIN "
-    "(select itemId, value from tiki_tracker_item_fields WHERE itemId={itemId} and fieldId=49) ementa "
+    "(SELECT itemId, value FROM tiki_tracker_item_fields WHERE itemId={itemId} and fieldId=49) ementa "
     "INNER JOIN "
-    "(select itemId, value from tiki_tracker_item_fields WHERE itemId={itemId} and fieldId=50) objetivos_gerais "
+    "(SELECT itemId, value FROM tiki_tracker_item_fields WHERE itemId={itemId} and fieldId=50) objetivos_gerais "
     "INNER JOIN "
-    "(select itemId, value from tiki_tracker_item_fields WHERE itemId={itemId} and fieldId=51) objetivos_especificos "
+    "(SELECT itemId, value FROM tiki_tracker_item_fields WHERE itemId={itemId} and fieldId=51) objetivos_especificos "
     "INNER JOIN "
-    "(select itemId, value from tiki_tracker_item_fields WHERE itemId={itemId} and fieldId=53) conteudo_programatico "
+    "(SELECT itemId, value FROM tiki_tracker_item_fields WHERE itemId={itemId} and fieldId=53) conteudo_programatico "
     "INNER JOIN "
-    "(select itemId, value from tiki_tracker_item_fields WHERE itemId={itemId} and fieldId=54) metodo "
+    "(SELECT itemId, value FROM tiki_tracker_item_fields WHERE itemId={itemId} and fieldId=54) metodo "
     "INNER JOIN "
-    "(select itemId, value from tiki_tracker_item_fields WHERE itemId={itemId} and fieldId=55) recursos "
+    "(SELECT itemId, value FROM tiki_tracker_item_fields WHERE itemId={itemId} and fieldId=55) recursos "
     "INNER JOIN "
-    "(select itemId, value from tiki_tracker_item_fields WHERE itemId={itemId} and fieldId=57) pre_requisitos "
+    "(SELECT itemId, value FROM tiki_tracker_item_fields WHERE itemId={itemId} and fieldId=57) pre_requisitos "
     "INNER JOIN "
-    "(select itemId, value from tiki_tracker_item_fields WHERE itemId={itemId} and fieldId=96) semestre".format(itemId=row['itemId']))
-    data = cursor.fetchone()
-    print("Generating " + data['codigo'])
-    copyDirectory('template', "tmp/" + data['codigo'])
-    with open("tmp/" + data['codigo'] + "/" + data['codigo'] + ".tex", "w") as fh:
+    "(SELECT itemId, value FROM tiki_tracker_item_fields WHERE itemId={itemId} and fieldId=96) semestre".format(itemId=row['itemId']))
+    data = {}
+    data['plano'] = cursor.fetchone()
+    print("Generating " + data['plano']['codigo'])
+    data['pre_requisitos'] = []
+    if data['plano']['pre_requisitos']:
+        print ("pre-requisitos " + data['plano']['pre_requisitos'])
+        cursor.execute("SELECT CONCAT(ttif1.value, ' - ', ttif2.value) as pre_requisito FROM "
+        "tiki_tracker_item_fields ttif1, tiki_tracker_item_fields ttif2 WHERE "
+        "ttif1.itemId in ({CodPreReqs}) and ttif1.fieldId=45 and "
+        "ttif2.itemId=ttif1.itemId and ttif2.fieldId=46".format(CodPreReqs=data['plano']['pre_requisitos']))
+        data['pre_requisitos'] = cursor.fetchall()
+    copyDirectory('template', "tmp/" + data['plano']['codigo'])
+    with open("tmp/" + data['plano']['codigo'] + "/" + data['plano']['codigo'] + ".tex", "w") as fh:
         fh.write(template.render(data))
-    os.chdir("tmp/" + data['codigo'])
-    proc = subprocess.Popen(['pdflatex', data['codigo'] + ".tex"], stdout=subprocess.PIPE)
+    os.chdir("tmp/" + data['plano']['codigo'])
+    proc = subprocess.Popen(['pdflatex', data['plano']['codigo'] + ".tex"], stdout=subprocess.PIPE)
     proc.communicate()
-    shutil.move(data['codigo'] + ".pdf", "../../output/")
+    shutil.move(data['plano']['codigo'] + ".pdf", "../../output/")
     os.chdir("../../")
 
 shutil.rmtree("tmp")
