@@ -95,7 +95,7 @@ Nenhum
 \end{itemize}
 
 \section{Método}
-Aulas expositivas, práticas em laboratório e estudos de caso.
+{{ plano.metodo }}
 
 \section{Recursos}
 {{ plano.recursos }}
@@ -103,9 +103,9 @@ Aulas expositivas, práticas em laboratório e estudos de caso.
 \section{Avaliações}
 
 \begin{cvcolumns}
-  \cvcolumn{Tipo da Avaliação}{Implementação/Análise de Implementação\\Prova escrita individual}
-  \cvcolumn[0.2]{Quantidade}{16\\3}
-  \cvcolumn[0.1]{Peso*}{3\\7}
+   \cvcolumn{Tipo da Avaliação}{{ '{' }}{% for avaliacao in avaliacoes %}{{ avaliacao.tipo }}{% if not loop.last %}\\{% endif %}{% endfor %}{{ '}' }}
+   \cvcolumn[0.2]{Quantidade}{{ '{' }}{% for avaliacao in avaliacoes %}{{ avaliacao.qtde }}{% if not loop.last %}\\{% endif %}{% endfor %}{{ '}' }}
+   \cvcolumn[0.1]{Peso*}{{ '{' }}{% for avaliacao in avaliacoes %}{{ avaliacao.peso }}{% if not loop.last %}\\{% endif %}{% endfor %}{{ '}' }}
 \end{cvcolumns}
 ~\\
 \textbf{*} A soma dos pesos deve ser igual a 10.

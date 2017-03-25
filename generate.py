@@ -74,6 +74,8 @@ for row in cursor:
     data = {}
     data['plano'] = cursor.fetchone()
     print("Generating " + data['plano']['codigo'])
+
+    # Pre-requisitos
     data['pre_requisitos'] = []
     if data['plano']['pre_requisitos']:
         cursor.execute("SELECT CONCAT(ttif1.value, ' - ', ttif2.value) as pre_requisito FROM "
@@ -81,6 +83,35 @@ for row in cursor:
         "ttif1.itemId in ({CodPreReqs}) and ttif1.fieldId=45 and "
         "ttif2.itemId=ttif1.itemId and ttif2.fieldId=46".format(CodPreReqs=data['plano']['pre_requisitos']))
         data['pre_requisitos'] = cursor.fetchall()
+
+    # Avaliacoes
+    cursor.execute("SELECT tipo.value as tipo, qtde.value as qtde, peso.value as peso FROM "
+    "(SELECT ttif1.itemId, ttif3.value FROM "
+    "tiki_tracker_item_fields ttif1, tiki_tracker_item_fields ttif2, tiki_tracker_item_fields ttif3 "
+    "WHERE "
+        "ttif1.value={itemId} and "
+        "ttif1.fieldId=56 and "
+        "ttif2.itemId = ttif1.itemId and "
+        "ttif2.fieldId=59 and "
+        "ttif3.itemId = ttif2.value "
+    ") tipo, "
+    "(SELECT ttif2.itemId, ttif2.value FROM "
+    "tiki_tracker_item_fields ttif1, tiki_tracker_item_fields ttif2 "
+    "WHERE "
+        "ttif1.fieldId=56 and "
+        "ttif2.itemId = ttif1.itemId and "
+        "ttif2.fieldId=60 "
+    ") qtde, "
+    "(SELECT ttif2.itemId, ttif2.value FROM "
+    "tiki_tracker_item_fields ttif1, tiki_tracker_item_fields ttif2 "
+        "WHERE "
+        "ttif1.fieldId=56 and "
+        "ttif2.itemId = ttif1.itemId and "
+        "ttif2.fieldId=61 "
+    ") peso "
+    "WHERE qtde.itemId=tipo.itemId and peso.itemId=tipo.itemId".format(itemId=row['itemId']))
+    data['avaliacoes'] = cursor.fetchall()
+
     copyDirectory('template', "tmp/" + data['plano']['codigo'])
     with open("tmp/" + data['plano']['codigo'] + "/" + data['plano']['codigo'] + ".tex", "w") as fh:
         fh.write(template.render(data))
