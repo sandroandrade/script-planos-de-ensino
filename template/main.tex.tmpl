@@ -28,7 +28,7 @@
 \section{Informações da Disciplina}
 \cvdoubleitem{Nome}{{ '{' }}{{ plano.nome }}{{ '}' }}{Código}{{ '{' }}{{ plano.codigo }}{{ '}' }}
 \cvdoubleitem{Carga Horária}{{ '{' }}{{ plano.carga_horaria }}h}{Semestre}{{ '{' }}{{ plano.semestre }}{% if semestre != "não definido" %}\textsuperscript{o}{% endif %}}
-\cvdoubleitem{Professor}{???}{}{}
+\cvitem{Professor(es)}{{ '{' }}{{ plano.professor }}{{ '}' }}
 
 \section{Ementa}
 {{ plano.ementa }}
