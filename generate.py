@@ -238,6 +238,43 @@ for row in cursor:
     ") ano "
     "WHERE autores.itemId=titulo.itemId and veiculo.itemId=titulo.itemId and dadosadicionais.itemId=titulo.itemId and ano.itemId=titulo.itemId".format(itemId=row['itemId']))
     data['bibliografia_complementar'] = cursor.fetchall()
+    
+    # Revisoes
+    cursor.execute("SELECT versao.value as versao, elaboradopor.value as elaboradopor, aprovadopor.value as aprovadopor, dtaprovacao.value as dtaprovacao FROM "
+    "(SELECT ttif1.itemId, ttif2.value FROM "
+    "tiki_tracker_item_fields ttif1, tiki_tracker_item_fields ttif2 "
+    "WHERE "
+        "ttif1.value={itemId} and "
+        "ttif1.fieldId=74 and "
+        "ttif2.itemId = ttif1.itemId and "
+        "ttif2.fieldId=70 "
+    ") versao, "
+    "(SELECT ttif1.itemId, ttif2.value FROM "
+    "tiki_tracker_item_fields ttif1, tiki_tracker_item_fields ttif2 "
+    "WHERE "
+        "ttif1.value={itemId} and "
+        "ttif1.fieldId=74 and "
+        "ttif2.itemId = ttif1.itemId and "
+        "ttif2.fieldId=71 "
+    ") elaboradopor, "
+    "(SELECT ttif1.itemId, ttif2.value FROM "
+    "tiki_tracker_item_fields ttif1, tiki_tracker_item_fields ttif2 "
+    "WHERE "
+        "ttif1.value={itemId} and "
+        "ttif1.fieldId=74 and "
+        "ttif2.itemId = ttif1.itemId and "
+        "ttif2.fieldId=72 "
+    ") aprovadopor, "
+    "(SELECT ttif1.itemId, ttif2.value FROM "
+    "tiki_tracker_item_fields ttif1, tiki_tracker_item_fields ttif2 "
+    "WHERE "
+        "ttif1.value={itemId} and "
+        "ttif1.fieldId=74 and "
+        "ttif2.itemId = ttif1.itemId and "
+        "ttif2.fieldId=73 "
+    ") dtaprovacao "
+    "WHERE elaboradopor.itemId=versao.itemId and aprovadopor.itemId=versao.itemId and dtaprovacao.itemId=versao.itemId".format(itemId=row['itemId']))
+    data['revisoes'] = cursor.fetchall()
 
     copyDirectory('template', "tmp/" + data['plano']['codigo'])
     with open("tmp/" + data['plano']['codigo'] + "/" + data['plano']['codigo'] + ".tex", "w") as fh:
@@ -247,7 +284,6 @@ for row in cursor:
     proc.communicate()
     shutil.move(data['plano']['codigo'] + ".pdf", "../../output/")
     os.chdir("../../")
-    break
 
 shutil.rmtree("tmp")
 cnx.close()

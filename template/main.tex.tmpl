@@ -53,7 +53,7 @@ Nenhum
 
 \section{Conteúdo Programático}
 \begin{itemize}
-    {% set item_number = plano.conteudo_programatico[0].split(' ')|first %}
+    {% set counter = [] %}
     {% for item_conteudo in plano.conteudo_programatico %}
         {% if item_conteudo|trim %}
             {% set item_number = item_conteudo.split(' ')|first %}
@@ -61,15 +61,17 @@ Nenhum
             {% if not loop.first %}
                 {% if item_number|occurrencesOf(".") > previous_number|occurrencesOf(".") %}
 \begin{itemize}
+{% if counter.append(1) %}{% endif %}
                 {% endif %}
                 {% if item_number|occurrencesOf(".") < previous_number|occurrencesOf(".") %}
 \end{itemize}
+{% if counter.pop() %}{% endif %}
                 {% endif %}
             {% endif %}
 \item {{ item_conteudo.split(' ')[1:]|join(" ") }}
         {% endif %}
     {% endfor %}
-    {% for _ in range(0, item_number|occurrencesOf("."))  %}
+    {% for _ in range(0, counter|length)  %}
 \end{itemize}
     {% endfor %}
 \end{itemize}
@@ -141,10 +143,10 @@ Nenhum
 \section{Revisões}
 
 \begin{cvcolumns}
-	\cvcolumn[0.1]{Revisão}{1}
-	\cvcolumn[0.34]{Elaborado por}{Sandro Andrade}
-	\cvcolumn[0.34]{Aprovado por}{Coordenação de ADS}
-	\cvcolumn{Data da Aprovação}{02/09/2015}
+	\cvcolumn[0.1]{Revisão}{{ '{' }}{% for revisao in revisoes %}{{ revisao.versao }}{% if not loop.last %}\\{% endif %}{% endfor %}{{ '}' }}
+	\cvcolumn[0.34]{Elaborado por}{{ '{' }}{% for revisao in revisoes %}{{ revisao.elaboradopor }}{% if not loop.last %}\\{% endif %}{% endfor %}{{ '}' }}
+	\cvcolumn[0.34]{Aprovado por}{{ '{' }}{% for revisao in revisoes %}{{ revisao.aprovadopor }}{% if not loop.last %}\\{% endif %}{% endfor %}{{ '}' }}
+	\cvcolumn{Data da Aprovação}{{ '{' }}{% for revisao in revisoes %}{{ revisao.dtaprovacao }}{% if not loop.last %}\\{% endif %}{% endfor %}{{ '}' }}
 \end{cvcolumns}
 
 \end{document}
