@@ -21,6 +21,11 @@ env = Environment(
     loader=FileSystemLoader('./')
 )
 
+def occurrencesOf(input, substr):
+    return input.count(substr)
+
+env.filters['occurrencesOf'] = occurrencesOf
+
 template = env.get_template("template/main.tex.tmpl")
 os.makedirs('tmp')
 os.makedirs('output')
@@ -74,6 +79,8 @@ for row in cursor:
     data = {}
     data['plano'] = cursor.fetchone()
     print("Generating " + data['plano']['codigo'])
+    
+    data['plano']['conteudo_programatico'] = [x for x in data['plano']['conteudo_programatico'].split('\r\n') if x.strip()]
 
     # Pre-requisitos
     data['pre_requisitos'] = []
@@ -120,6 +127,7 @@ for row in cursor:
     proc.communicate()
     shutil.move(data['plano']['codigo'] + ".pdf", "../../output/")
     os.chdir("../../")
+    break
 
 shutil.rmtree("tmp")
 cnx.close()

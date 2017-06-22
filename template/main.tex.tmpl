@@ -53,45 +53,25 @@ Nenhum
 
 \section{Conteúdo Programático}
 \begin{itemize}
-\item Introdução
+    {% set item_number = plano.conteudo_programatico[0].split(' ')|first %}
+    {% for item_conteudo in plano.conteudo_programatico %}
+        {% if item_conteudo|trim %}
+            {% set item_number = item_conteudo.split(' ')|first %}
+                {% set previous_number = plano.conteudo_programatico[loop.index0-1].split(' ')|first %}
+            {% if not loop.first %}
+                {% if item_number|occurrencesOf(".") > previous_number|occurrencesOf(".") %}
 \begin{itemize}
-\item O que é um padrão de projeto ?
-\item Padrões de Projeto X Padrões Arquiteturais X Idiomas de Programação
-\item Padrões e Princípios de Projeto Orientado a Objetos
+                {% endif %}
+                {% if item_number|occurrencesOf(".") < previous_number|occurrencesOf(".") %}
 \end{itemize}
-\item Padrões Criacionais
-\begin{itemize}
-\item Abstract Factory
-\item Builder
-\item Factory Method
-\item Prototype
-\item Singleton
+                {% endif %}
+            {% endif %}
+\item {{ item_conteudo.split(' ')[1:]|join(" ") }}
+        {% endif %}
+    {% endfor %}
+    {% for _ in range(0, item_number|occurrencesOf("."))  %}
 \end{itemize}
-\item Padrões Estruturais
-\begin{itemize}
-\item Adapter
-\item Bridge
-\item Composite
-\item Decorator
-\item Facade
-\item Flyweight
-\item Proxy
-\end{itemize}
-\item Padrões Comportamentais
-\begin{itemize}
-\item Chain of Responsibility
-\item Command
-\item Interpreter
-\item Iterator
-\item Mediator
-\item Memento
-\item Observer
-\item State
-\item Strategy
-\item Template Method
-\item Visitor
-\end{itemize}
-\item Estudo de Caso
+    {% endfor %}
 \end{itemize}
 
 \section{Método}
