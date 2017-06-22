@@ -108,7 +108,7 @@ Nenhum
 		{% if livro_basico.veiculo %}{{ livro_basico.veiculo }}{% else %}~{% endif %}
 	{{ '}' }}
 	\cvcolumn[0.2]{{ '{' }}{% if loop.first %}Dados\\Adicionais{% endif %}{{ '}' }}{{ '{' }}
-		{{ livro_basico.dadosadicionais }}
+        {% if livro_basico.dadosadicionais %}{{ livro_basico.dadosadicionais }}{% else %}~{% endif %}
 	{{ '}' }}
 	\cvcolumn{{ '{' }}{% if loop.first %}Ano{% endif %}{{ '}' }}{{ '{' }}
 		{{ livro_basico.ano }}
@@ -131,7 +131,7 @@ Nenhum
 		{% if livro_complementar.veiculo %}{{ livro_complementar.veiculo }}{% else %}~{% endif %}
 	{{ '}' }}
 	\cvcolumn[0.2]{{ '{' }}{% if loop.first %}Dados\\Adicionais{% endif %}{{ '}' }}{{ '{' }}
-		{{ livro_complementar.dadosadicionais }}
+        {% if livro_complementar.dadosadicionais %}{{ livro_complementar.dadosadicionais }}{% else %}~{% endif %}
 	{{ '}' }}
 	\cvcolumn{{ '{' }}{% if loop.first %}Ano{% endif %}{{ '}' }}{{ '{' }}
 		{{ livro_complementar.ano }}
