@@ -105,7 +105,7 @@ Nenhum
 		{{ livro_basico.autores }}
 	{{ '}' }}
 	\cvcolumn[0.15]{{ '{' }}{% if loop.first %}Veículo{% endif %}{{ '}' }}{{ '{' }}
-		{{ livro_basico.veiculo }}
+		{% if livro_basico.veiculo %}{{ livro_basico.veiculo }}{% else %}~{% endif %}
 	{{ '}' }}
 	\cvcolumn[0.2]{{ '{' }}{% if loop.first %}Dados\\Adicionais{% endif %}{{ '}' }}{{ '{' }}
 		{{ livro_basico.dadosadicionais }}
@@ -128,7 +128,7 @@ Nenhum
 		{{ livro_complementar.autores }}
 	{{ '}' }}
 	\cvcolumn[0.15]{{ '{' }}{% if loop.first %}Veículo{% endif %}{{ '}' }}{{ '{' }}
-		{{ livro_complementar.veiculo }}
+		{% if livro_complementar.veiculo %}{{ livro_complementar.veiculo }}{% else %}~{% endif %}
 	{{ '}' }}
 	\cvcolumn[0.2]{{ '{' }}{% if loop.first %}Dados\\Adicionais{% endif %}{{ '}' }}{{ '{' }}
 		{{ livro_complementar.dadosadicionais }}
