@@ -94,61 +94,48 @@ Nenhum
 
 \textbf{Básica}
 
+{% for livro_basico in bibliografia_basica %}
 \begin{cvcolumns}
-	\cvcolumn[0.3]{Título}{
-		Padrões de Projeto: Soluções Reutilizaveis de Software
-	}
-	\cvcolumn[0.25]{Autor(es)}{
-		Erich Gamma e Richard Helm
-	}
-	\cvcolumn[0.15]{Veículo}{
-		Bookman
-	}
-	\cvcolumn[0.2]{Dados\\Adicionais}{
-		ISBN: 8573076100
-	}
-	\cvcolumn{Ano}{
-		2000
-	}
+	\cvcolumn[0.3]{{ '{' }}{% if loop.first %}Título{% endif %}{{ '}' }}{{ '{' }}
+		{{ livro_basico.titulo }}
+	{{ '}' }}
+	\cvcolumn[0.25]{{ '{' }}{% if loop.first %}Autor(es){% endif %}{{ '}' }}{{ '{' }}
+		{{ livro_basico.autores }}
+	{{ '}' }}
+	\cvcolumn[0.15]{{ '{' }}{% if loop.first %}Veículo{% endif %}{{ '}' }}{{ '{' }}
+		{{ livro_basico.veiculo }}
+	{{ '}' }}
+	\cvcolumn[0.2]{{ '{' }}{% if loop.first %}Dados\\Adicionais{% endif %}{{ '}' }}{{ '{' }}
+		{{ livro_basico.dadosadicionais }}
+	{{ '}' }}
+	\cvcolumn{{ '{' }}{% if loop.first %}Ano{% endif %}{{ '}' }}{{ '{' }}
+		{{ livro_basico.ano }}
+	{{ '}' }}
 \end{cvcolumns}
-\begin{cvcolumns}
-	\cvcolumn[0.3]{}{
-			Explicando Padrões de Projeto
-	}
-	\cvcolumn[0.25]{}{
-			Shalloway, Alan e Trott, James R.
-	}
-	\cvcolumn[0.15]{}{
-			Bookman
-	}
-	\cvcolumn[0.2]{}{
-			ISBN: 8536304030
-	}
-	\cvcolumn{}{
-			2004
-	}
-\end{cvcolumns}
+{% endfor %}
 
 ~\\~\\
 \textbf{Complementar}
 
+{% for livro_complementar in bibliografia_complementar %}
 \begin{cvcolumns}
-	\cvcolumn[0.3]{Título}{
-		Use a Cabeça! Padrões de Projetos (Design Patterns)
-	}
-	\cvcolumn[0.25]{Autor(es)}{
-		Freeman, Elisabeth and Freeman, Eric
-	}
-	\cvcolumn[0.15]{Veículo}{
-		Alta Books 
-	}
-	\cvcolumn[0.2]{Dados\\Adicionais}{
-		ISBN: 9788576081746
-	}
-	\cvcolumn{Ano}{
-		2007
-	}
+	\cvcolumn[0.3]{{ '{' }}{% if loop.first %}Título{% endif %}{{ '}' }}{{ '{' }}
+		{{ livro_complementar.titulo }}
+	{{ '}' }}
+	\cvcolumn[0.25]{{ '{' }}{% if loop.first %}Autor(es){% endif %}{{ '}' }}{{ '{' }}
+		{{ livro_complementar.autores }}
+	{{ '}' }}
+	\cvcolumn[0.15]{{ '{' }}{% if loop.first %}Veículo{% endif %}{{ '}' }}{{ '{' }}
+		{{ livro_complementar.veiculo }}
+	{{ '}' }}
+	\cvcolumn[0.2]{{ '{' }}{% if loop.first %}Dados\\Adicionais{% endif %}{{ '}' }}{{ '{' }}
+		{{ livro_complementar.dadosadicionais }}
+	{{ '}' }}
+	\cvcolumn{{ '{' }}{% if loop.first %}Ano{% endif %}{{ '}' }}{{ '{' }}
+		{{ livro_complementar.ano }}
+	{{ '}' }}
 \end{cvcolumns}
+{% endfor %}
 
 \vspace{\fill}
 \section{Revisões}
