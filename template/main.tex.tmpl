@@ -64,8 +64,10 @@ Nenhum
 {% if counter.append(1) %}{% endif %}
                 {% endif %}
                 {% if item_number|occurrencesOf(".") < previous_number|occurrencesOf(".") %}
+                    {% for _ in range(0, previous_number|occurrencesOf(".")-item_number|occurrencesOf("."))  %}
 \end{itemize}
 {% if counter.pop() %}{% endif %}
+                    {% endfor %}
                 {% endif %}
             {% endif %}
 \item {{ item_conteudo.split(' ')[1:]|join(" ") }}
